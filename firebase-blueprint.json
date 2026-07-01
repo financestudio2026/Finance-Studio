@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Represents a vehicle in the fleet, along with its document validity status and loan EMI details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique vehicle identifier." },
+        "regNo": { "type": "string", "description": "Registration number of the vehicle." },
+        "model": { "type": "string", "description": "Vehicle model name." },
+        "type": { "type": "string", "enum": ["Truck", "Bus", "Car", "Van", "Auto"], "description": "Type of vehicle." },
+        "emiAmount": { "type": "number", "description": "Monthly EMI amount for vehicle loan." },
+        "emiDueDate": { "type": "string", "format": "date", "description": "Next loan EMI due date." },
+        "insuranceExpiry": { "type": "string", "format": "date", "description": "Insurance policy expiry date." },
+        "insuranceProvider": { "type": "string", "description": "Insurance policy provider." },
+        "taxExpiry": { "type": "string", "format": "date", "description": "Road tax validity expiry date." },
+        "fitnessExpiry": { "type": "string", "format": "date", "description": "Fitness certificate expiry date." },
+        "assignedDriverId": { "type": "string", "description": "Assigned driver's user/driver ID." },
+        "assignedDriverName": { "type": "string", "description": "Name of the assigned driver." },
+        "status": { "type": "string", "enum": ["Active", "Maintenance", "Inactive"], "description": "Operational status of the vehicle." },
+        "lat": { "type": "number", "description": "Current latitude position for live tracking." },
+        "lng": { "type": "number", "description": "Current longitude position for live tracking." },
+        "lastUpdated": { "type": "string", "format": "date-time", "description": "Last tracking update timestamp." }
+      },
+      "required": ["id", "regNo", "model", "type", "emiAmount", "emiDueDate", "insuranceExpiry", "taxExpiry", "fitnessExpiry"]
+    },
+    "Driver": {
+      "title": "Driver",
+      "description": "Represents a driver managed in the system.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique driver ID (matches user ID in authentication)." },
+        "name": { "type": "string", "description": "Driver's full name." },
+        "email": { "type": "string", "description": "Driver's email address." },
+        "phone": { "type": "string", "description": "Driver's phone number." },
+        "licenseNo": { "type": "string", "description": "Driving license number." },
+        "licenseExpiry": { "type": "string", "format": "date", "description": "Driving license expiry date." },
+        "assignedVehicleId": { "type": "string", "description": "ID of the vehicle currently assigned to this driver." },
+        "assignedVehicleReg": { "type": "string", "description": "Registration number of the assigned vehicle." },
+        "status": { "type": "string", "enum": ["Available", "On Trip", "Off Duty"], "description": "Driver availability status." }
+      },
+      "required": ["id", "name", "email", "phone", "licenseNo", "licenseExpiry"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Represents an expense logged for a vehicle.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique expense identifier." },
+        "vehicleId": { "type": "string", "description": "Vehicle ID for which the expense was logged." },
+        "vehicleReg": { "type": "string", "description": "Registration number of the vehicle." },
+        "category": { "type": "string", "enum": ["EMI", "Insurance", "Tax", "Fitness", "Fuel", "Maintenance", "Toll", "Fine", "Other"], "description": "Expense category." },
+        "amount": { "type": "number", "description": "Expense amount." },
+        "date": { "type": "string", "format": "date", "description": "Date of the expense." },
+        "description": { "type": "string", "description": "Brief description of the expense." },
+        "loggedBy": { "type": "string", "description": "User ID of the person who logged the expense." },
+        "loggedByName": { "type": "string", "description": "Name of the person who logged the expense." },
+        "loggedByRole": { "type": "string", "enum": ["admin", "driver"], "description": "Role of the person who logged the expense." }
+      },
+      "required": ["id", "vehicleId", "vehicleReg", "category", "amount", "date", "loggedBy"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Represents a registered user (Admin or Driver) in the application.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique Firebase Authentication UID." },
+        "email": { "type": "string", "description": "User email address." },
+        "name": { "type": "string", "description": "User's full name." },
+        "role": { "type": "string", "enum": ["admin", "driver"], "description": "Access control role of the user." },
+        "assignedVehicleId": { "type": "string", "description": "For drivers, their assigned vehicle ID." }
+      },
+      "required": ["uid", "email", "name", "role"]
+    }
+  },
+  "firestore": {
+    "/vehicles/{vehicleId}": {
+      "schema": { "$ref": "#/entities/Vehicle" },
+      "description": "Stores vehicle details, tracking, and document validity status."
+    },
+    "/drivers/{driverId}": {
+      "schema": { "$ref": "#/entities/Driver" },
+      "description": "Stores detailed driver profiles and license details."
+    },
+    "/expenses/{expenseId}": {
+      "schema": { "$ref": "#/entities/Expense" },
+      "description": "Stores logged fleet expenses."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user roles and permissions mapping."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Fleet and Document Manager",
+  "description": "A comprehensive mobile-friendly dashboard to manage vehicle fleet documents (EMI, Insurance, Tax, Fitness), track drivers, log expenses, and locate vehicles with Google Maps integration.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
